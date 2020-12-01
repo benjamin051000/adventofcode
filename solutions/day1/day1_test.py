@@ -1,5 +1,5 @@
 """
-Day 1 tests utilizing pytest
+Day 1 tests
 Benjamin Wheeler
 """
 from day1.solution import part1, part2
