@@ -21,10 +21,28 @@ def part1() -> int:
     return total
 
 
-def part2():
-    pass
+def part2() -> int:
+    with open('day2.input', 'r') as f:
+        entries = f.readlines()
+
+    # Use a regular expression to find the valid characters.
+    pattern = re.compile(r'(\d+)-(\d+) (\D): (\D+)')
+    total = 0
+
+    for e in entries:
+        first, second, check, psswd = re.match(pattern, e).groups()
+
+        # Subtract 1 because the string array begins at 1.
+        matches = int(psswd[int(first)-1] == check) + int(psswd[int(second)-1] == check)
+
+        total += int(matches == 1)
+
+    return total
 
 
 if __name__ == '__main__':
     answer = part1()
+    print(answer)
+
+    answer = part2()
     print(answer)
