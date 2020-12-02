@@ -1,5 +1,5 @@
 """
-Day 1
+Day 1 initial solution
 Benjamin Wheeler
 """
 

@@ -28,7 +28,7 @@ os.mkdir(directory)
 with open(f'{directory}/solution.py', 'w') as f:
     f.write(textwrap.dedent(f"""\
         \"\"\"
-        Day {day_num} solution
+        Day {day_num} initial solution
         Benjamin Wheeler
         \"\"\"
     
