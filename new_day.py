@@ -49,7 +49,17 @@ with open(f'{directory}/day{day_num}.input', 'w') as f:
 
 
 with open(f'{directory}/README.md', 'w') as f:
-    pass
+    f.write(textwrap.dedent(f"""\
+        # Day {day_num}
+        
+        ## Part 1
+        
+        
+        
+        ## Part 2
+
+        
+    """))
 
 
 # Write the test file
