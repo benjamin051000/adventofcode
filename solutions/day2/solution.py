@@ -33,9 +33,7 @@ def part2() -> int:
         first, second, check, psswd = re.match(pattern, e).groups()
 
         # Subtract 1 because the string array begins at 1.
-        matches = sum(int(psswd[int(e)-1] == check) for e in (first, second))
-
-        total += int(matches == 1)
+        total += (psswd[int(first)-1] == check) ^ (psswd[int(second)-1] == check)
 
     return total
 
