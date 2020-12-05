@@ -18,7 +18,7 @@ numbers = [int(i.strip('day')) for i in days]
 # New day number
 day_num = max(numbers) + 1
 
-print(f'Generating \'day{day_num}\'...')
+print(f'Generating \'day{day_num}\' directory...')
 
 # The name of the new directory from the root directory.
 directory = f'solutions/day{day_num}'
@@ -33,12 +33,23 @@ with open(f'{directory}/solution.py', 'w') as f:
         \"\"\"
     
     
-        def part1():
+        def part1() -> int:
             pass
         
         
-        def part2():
+        def part2() -> int:
             pass
+
+        
+        if __name__ == '__main__':
+            print(f'Running day {day_num}...')
+            answer = part1()
+            print('Part 1:', answer)
+            
+            answer = part2()
+            print('Part 2:', answer)
+            
+            print('Done.')
         
     """))
 
@@ -70,6 +81,7 @@ with open(f'{directory}/day{day_num}_test.py', 'w') as f:
             Benjamin Wheeler
             \"\"\"
             from day{day_num}.solution import part1, part2
+
 
             def test_part1():
                 pass
