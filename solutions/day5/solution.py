@@ -58,22 +58,19 @@ def part2() -> int:
     occupied_seats = set()
     for seat in seats:
         r, c = get_row_col(seat)
-        occupied_seats.add((r, c))
+        occupied_seats.add(8 * r + c)
 
     # Get all seats not in this set of seats.
-    all_seats: set = {(r, c) for c in range(8) for r in range(128)}
+    all_seats: set = {8 * r + c for c in range(8) for r in range(128)}
 
     # Get IDs of each unoccupied seat.
-    unoccupied = [r * 8 + c for r, c in all_seats - occupied_seats]
+    unoccupied = all_seats - occupied_seats
 
     # Search for a seat with no empty neighbors.
     temp = set(unoccupied)
     for seat in temp:
         if seat + 1 not in temp and seat - 1 not in temp:
             return seat
-
-    else:
-        return -1
 
 
 if __name__ == '__main__':
