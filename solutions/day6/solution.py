@@ -28,6 +28,7 @@ def part1() -> int:
 
 
 def part2(questions=None) -> int:
+    # Elaborated for test cases
     if questions is None:
         with open('day6.input', 'r') as f:
             questions = f.read().splitlines()
@@ -36,6 +37,7 @@ def part2(questions=None) -> int:
 
     total_yes = 0
 
+    # Use a starting set of every ascii character a-z.
     starting_set = {c for c in ascii_lowercase}
 
     everyone_yes = starting_set.copy()
@@ -45,8 +47,10 @@ def part2(questions=None) -> int:
             everyone_yes = starting_set.copy()
             continue
 
+        # Get the intersection between the set everyone has said yes to with this one.
         everyone_yes &= {c for c in line}
 
+    # Add the last iteration to the total.
     return total_yes + len(everyone_yes)
 
 
