@@ -20,8 +20,7 @@ def parse_bags(rules: list = None) -> dict:
 
 def find_bag(rules: dict, bag: str, key: str) -> bool:
     """ Recursive function to find a given
-    bag key from bag start. If no key is given
-    (e.g. key = None), then return every empty bag. """
+    bag key from the startinng bag."""
     # Base: key is in this bag.
     if key in rules[bag].keys():
         return True
