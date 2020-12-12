@@ -7,10 +7,10 @@ from day10.solution import part1, part2
 
 
 def test_part1():
-    pass
+    assert part1() == 2376
 
 
-def test_part1_example():
+def test_example1():
     example = dedent("""\
     16
     10
@@ -25,8 +25,47 @@ def test_part1_example():
     4
     """)
     assert part1(example) == 7 * 5
+    assert part2(example) == 8
+
+
+def test_example2():
+    example = dedent("""\
+    28
+    33
+    18
+    42
+    31
+    14
+    46
+    20
+    48
+    47
+    24
+    23
+    49
+    45
+    19
+    38
+    39
+    11
+    1
+    32
+    25
+    35
+    8
+    17
+    7
+    9
+    4
+    2
+    34
+    10
+    3
+    """)
+    assert part1(example) == 22 * 10
+    assert part2(example) == 19208
 
 
 def test_part2():
-    pass
+    assert part2() == 129586085429248
 

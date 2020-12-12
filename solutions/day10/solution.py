@@ -27,9 +27,54 @@ def part1(adapters: str = None) -> int:
     return diffs[0] * diffs[2]
 
 
+def get_paths_cached(adps) -> int:
+    cache = {}
 
-def part2() -> int:
-    pass
+    def get_paths(adapters, idx) -> int:
+        """ Recursive function to retrieve all possible adapter paths. """
+        # Check if it's in the cache.
+        if idx in cache:
+            return cache[idx]
+
+        # Base case: If we've reached the end of the list
+        if idx >= len(adapters) - 1:
+            # Add one to the total
+            return 1
+
+        this_adapter = adapters[idx]
+
+        # Get next 3 choices and see which ones are viable.
+        next_adapters = adapters[idx+1: idx+1+3]
+
+        # Try each one and sum up the results.
+        total = 0
+
+        for i, n in enumerate(next_adapters, start=1):
+            if n - this_adapter <= 3:
+                total += get_paths(adapters, i+idx)
+
+        # Otherwise, none of them were viable.
+        cache[idx] = total
+        return total
+
+    return get_paths(adps, 0)
+
+
+def part2(adapters: str = None) -> int:
+    if not adapters:
+        with open('day10.input', 'r') as f:
+            adapters = f.read()
+
+    # Get in int form
+    adapters = [int(e) for e in adapters.splitlines()]
+
+    adapters.sort()
+
+    # Add a zero to the beginning of the list
+    adapters = [0] + adapters
+
+    # Use recursion to check every combination
+    return get_paths_cached(adapters)
 
 
 if __name__ == '__main__':
