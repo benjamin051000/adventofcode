@@ -2,7 +2,7 @@
 Day 5 tests
 Benjamin Wheeler
 """
-from day5.solution import *
+from day05.solution import *
 
 
 def test_get_row_col():

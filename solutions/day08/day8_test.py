@@ -3,7 +3,7 @@ Day 8 tests
 Benjamin Wheeler
 """
 from textwrap import dedent
-from day8.solution import part1, part2
+from day08.solution import part1, part2
 
 
 def test_part1():

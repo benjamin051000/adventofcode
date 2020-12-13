@@ -3,7 +3,7 @@ Day 2 tests
 Benjamin Wheeler
 """
 from timeit import Timer
-from day2.solution import part1, part2
+from day02.solution import part1, part2
 
 
 def test_part1():

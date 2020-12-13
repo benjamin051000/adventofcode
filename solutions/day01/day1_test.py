@@ -2,7 +2,7 @@
 Day 1 tests
 Benjamin Wheeler
 """
-from day1.solution import part1, part2
+from day01.solution import part1, part2
 
 
 def test_part1():

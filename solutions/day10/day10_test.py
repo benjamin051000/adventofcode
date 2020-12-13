@@ -4,6 +4,7 @@ Benjamin Wheeler
 """
 from textwrap import dedent
 from day10.solution import part1, part2
+from timeit import default_timer
 
 
 def test_part1():
@@ -67,5 +68,7 @@ def test_example2():
 
 
 def test_part2():
+    start = default_timer()
     assert part2() == 129586085429248
-
+    end = default_timer()
+    print('Elapsed time:', end - start)

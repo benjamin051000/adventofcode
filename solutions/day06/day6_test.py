@@ -3,7 +3,7 @@ Day 6 tests
 Benjamin Wheeler
 """
 import textwrap
-from day6.solution import part1, part2
+from day06.solution import part1, part2
 
 
 def test_part2_sample_input():

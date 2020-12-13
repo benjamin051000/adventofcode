@@ -2,7 +2,7 @@
 Day 4 tests
 Benjamin Wheeler
 """
-from day4.solution import part1, part2
+from day04.solution import part1, part2
 
 
 def test_part1():
