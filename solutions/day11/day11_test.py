@@ -72,5 +72,5 @@ def test_first_visible():
 
 
 def test_part2():
-    pass
+    assert part2() == 2119
 
