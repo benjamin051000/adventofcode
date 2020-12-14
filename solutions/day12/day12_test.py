@@ -15,6 +15,7 @@ def test_example1():
     F11
     """)
     assert part1(example) == 25
+    assert part2(example) == 286
 
 
 def test_part1():
