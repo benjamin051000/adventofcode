@@ -31,3 +31,6 @@ def test_part2():
 
     for i, o in tests.items():
         assert part2(i) == o
+
+    # Test input file
+    assert part2() == 600689120448303
