@@ -2,7 +2,7 @@
 Day 13 tests
 Benjamin Wheeler
 """
-from day13.solution import part1, part2, chinese
+from day13.solution import part1, part2, chinese, inverse
 
 
 def test_part1():
