@@ -20,5 +20,14 @@ def test_part1():
 
 
 def test_part2():
-    pass
+    example = dedent("""\
+    mask = 000000000000000000000000000000X1001X
+    mem[42] = 100
+    mask = 00000000000000000000000000000000X0XX
+    mem[26] = 1
+    """)
+
+    assert part2(example) == 208
+
+    assert part2() == 3369767240513
 
