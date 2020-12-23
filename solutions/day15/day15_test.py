@@ -6,6 +6,9 @@ from day15.solution import part1, part2
 
 
 def test_part1():
+    # Test the step-by-step example
+    assert part1('0,3,6') == 436
+
     # Test several examples
     data = {
         '1,3,2': 1,
@@ -19,8 +22,7 @@ def test_part1():
     for nums, ans in data.items():
         assert part1(nums) == ans
 
-    # Test the step-by-step example
-    assert part1('0,3,6') == 436
+
 
 
 def test_part2():
