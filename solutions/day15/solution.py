@@ -6,42 +6,43 @@ Benjamin Wheeler
 
 def part1(starting_nums=None) -> int:
     if not starting_nums:
-        with open('day15.input', 'r') as f:
+        with open('solutions/day15/day15.input', 'r') as f:
             starting_nums = f.read()
 
     # Format numbers as integers.
-    starting_nums = [int(n) for n in starting_nums.split(',')]
+    spoken_nums = [int(n) for n in starting_nums.split(',')]
+    # If rounds has 5 elements, next round is 6.
+    round_num = len(spoken_nums) + 1
 
-    # A dictionary that keeps track of the round on which each word was spoken.
-    record = {k: v for v, k in enumerate(starting_nums, start=1)}
-    # record = {}
+    while len(spoken_nums) < 2020:
+        #print('Round', round_num)
 
-    # Keeps track of the last spoken word (to check the record dict).
-    last_spoken = starting_nums[-1]
+        # Look at previously spoken number
+        prev_num = spoken_nums[-1]
+        #print('Previous num:', prev_num)
 
-    del record[last_spoken]
+        # Has it been spoken before?
+        # Traverse backwards thru list to find next most recent spoken
+        for k in range(round_num-2, 0, -1):
+            #print('Checking round', k)
+            if spoken_nums[k-1] == prev_num:
+                # Take difference between these rounds
+                diff = (round_num-1) - (k-1) - 1
+                #print(f'Last round {prev_num} spoken: {k}')
+                #print(f'{round_num} - {k} = {diff}')
+                spoken_nums.append(diff)
+                break
+        else:
+            # Last time was first time. Say 0.
+            #print('First time. Speaking 0.')
+            spoken_nums.append(0)
+        
+        round_num += 1
+    
+    print(f'{len(spoken_nums)=}')
+    return spoken_nums[-1]
 
-    # Use a round number to keep track of age (yes, rounds start at one!)
-    starting_round = len(starting_nums) + 1  # Excludes last num which was deleted from the record.
-    for turn in range(starting_round, 2020+1):
-        try:
-            # Calculate when the last time this word was spoken was.
-            age = turn - 1 - record[last_spoken]
-
-            last_spoken = age
-
-            # Record this word's new turn number.
-            record[last_spoken] = turn
-
-        except KeyError:
-            # The word has not yet been spoken.
-            # Record new word.
-            record[last_spoken] = turn
-            last_spoken = 0
-
-        print(last_spoken)
-
-    return last_spoken
+    
 
 
 def part2() -> int:
