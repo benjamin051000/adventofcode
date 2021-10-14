@@ -5,13 +5,7 @@ Benjamin Wheeler
 import re
 import itertools
 
-def part1(text: str = None) -> int:
-    if text is None:
-        with open('day16.input', 'r') as f:
-            text = f.read()
-    
-    error_rate = 0
-
+def parse_rules(text: str):
     # Parse the text to get the rules.
     RULE_PATTERN = re.compile(r"(\w+): (\d+)-(\d+) or (\d+)-(\d+)")
     rules_text = re.findall(RULE_PATTERN, text)
@@ -23,10 +17,15 @@ def part1(text: str = None) -> int:
         second = set(range(int(rule[3]), int(rule[4])+1))
         rules.append((rule[0], first | second))
 
-    # Get the lines of tickets.
-    nearby_tix = text.partition("nearby tickets:\n")[2].splitlines()
+    return rules
     
-    for ticket in nearby_tix:
+
+def is_invalid(ticket, rules) -> int:
+    """
+    Determines if a ticket is invalid. 
+    Returns the value 0 if valid, or the number 
+    on the ticket which makes it invalid.
+    """
         nums = map(int, ticket.split(','))
         for num in nums:
             for rule in rules:
@@ -36,7 +35,21 @@ def part1(text: str = None) -> int:
                     break
             else:
                 # This number doesn't work with any rule. Ticket is certainly invalid.
-                error_rate += num
+            return num
+    
+    # All the numbers match up to at least one. Return 0 for valid.
+    return 0
+
+
+def part1(text: str) -> int:    
+    error_rate = 0
+    rules = parse_rules(text)
+
+    # Get the lines of tickets.
+    nearby_tix = text.partition("nearby tickets:\n")[2].splitlines()
+    
+    for ticket in nearby_tix:
+        error_rate += is_invalid(ticket, rules)
 
     return error_rate
 
