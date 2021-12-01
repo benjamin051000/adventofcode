@@ -90,23 +90,22 @@ with open(f'{directory}/README.md', 'w') as f:
 
 
 # Write the test file
-# TODO replace with STL unittest module
-# with open(f'{directory}/day{day_num}_test.py', 'w') as f:
-#     f.write(textwrap.dedent(f"""\
-#             \"\"\"
-#             Day {day_num} tests
-#             Benjamin Wheeler
-#             \"\"\"
-#             from day{day_num}.solution import part1, part2
+with open(f'{directory}/day{day_num}_test.py', 'w') as f:
+    f.write(textwrap.dedent(f"""\
+            \"\"\"
+            Day {day_num} tests
+            Benjamin Wheeler
+            \"\"\"
+            from day{day_num_str}.solution import part1, part2
 
 
-#             def test_part1():
-#                 pass
+            def test_part1():
+                pass
 
 
-#             def test_part2():
-#                 pass
+            def test_part2():
+                pass
 
-#         """))
+        """))
 
 print('Done.')
