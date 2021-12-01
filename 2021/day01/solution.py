@@ -4,7 +4,7 @@ Benjamin Wheeler
 """
 
 
-def part1(lines=None) -> int:
+def part1_original(lines=None) -> int:
     if not lines:
         with open('day01.input') as f:
             lines = f.read()
@@ -23,7 +23,7 @@ def part1(lines=None) -> int:
     return count
 
 
-def part2(lines=None) -> int:
+def part2_original(lines=None) -> int:
     if not lines:
         with open('day01.input') as f:
             lines = f.read()
@@ -42,6 +42,26 @@ def part2(lines=None) -> int:
         prev_window = curr_window
     
     return count
+
+
+# Super minimal solutions from https://github.com/viliampucik/adventofcode/blob/master/2021/01.py
+def part1(lines=None):
+    if not lines:
+        with open('day01.input') as f:
+            lines = f.read()
+    
+    nums = list(map(int, lines.splitlines()))
+    return sum(a < b for a, b in zip(nums, nums[1:]))
+
+
+def part2(lines=None):
+    if not lines:
+        with open('day01.input') as f:
+            lines = f.read()
+    
+    nums = list(map(int, lines.splitlines()))
+    # Since i+1 and i+2 overlap, don't bother checking them. Just check i+3 against i.
+    return sum(a < b for a, b in zip(nums, nums[3:]))
 
 
 if __name__ == '__main__':
