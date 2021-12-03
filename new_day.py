@@ -34,7 +34,7 @@ day_num = max(numbers) + 1
 
 day_num_str = f"{day_num:02d}"  # Format with one leading zero
 
-print(f"Generating 'day{day_num_str}' directory...")
+print(f"Generating '{year}/day{day_num_str}' directory...")
 
 # The name of the new directory from the root directory.
 directory = f'{year}/day{day_num_str}'
@@ -44,25 +44,30 @@ os.mkdir(directory)
 with open(f'{directory}/solution.py', 'w') as f:
     f.write(textwrap.dedent(f"""\
         \"\"\"
-        Day {day_num} initial solution
-        Benjamin Wheeler
+        Advent of Code {year}
+        Day {day_num} solution
+        Author: Benjamin Wheeler
         \"\"\"
     
     
-        def part1() -> int:
-            pass
+        def part1(text: str) -> int:
+            lines = text.splitlines()
         
         
-        def part2() -> int:
-            pass
+        def part2(text: str) -> int:
+            lines = text.splitlines()
 
         
         if __name__ == '__main__':
             print(f'Running day {day_num}...')
-            answer = part1()
+
+            with open('day02.input') as f:
+                text = f.read()
+
+            answer = part1(text)
             print('Part 1:', answer)
             
-            answer = part2()
+            answer = part2(text)
             print('Part 2:', answer)
             
             print('Done.')
@@ -93,18 +98,23 @@ with open(f'{directory}/README.md', 'w') as f:
 with open(f'{directory}/day{day_num}_test.py', 'w') as f:
     f.write(textwrap.dedent(f"""\
             \"\"\"
+            Advent of Code {year}
             Day {day_num} tests
-            Benjamin Wheeler
+            Author: Benjamin Wheeler
             \"\"\"
-            from day{day_num_str}.solution import part1, part2
+            from solution import part1, part2
+            from textwrap import dedent
 
+            text = dedent(\"\"\"\\
+
+                \"\"\")
 
             def test_part1():
-                pass
+                assert part1(text) == 0
 
 
             def test_part2():
-                pass
+                assert part2(text) == 0
 
         """))
 
