@@ -4,12 +4,54 @@ Benjamin Wheeler
 """
 
 
-def part1() -> int:
-    pass
+def part1(text=None) -> int:
+    if not text:
+        with open('day02.input') as f:
+            text = f.read()
+    
+    lines = text.splitlines()
+    
+    x = 0  # horizontal position 
+    depth = 0
+
+    for line in lines:
+        direction, mag = line.split()
+        magnitude = int(mag)
+        
+        if direction == "up":
+            depth -= magnitude
+        elif direction == "down":
+            depth += magnitude
+        elif direction == "forward":
+            x += magnitude
+    
+    return x * depth
 
 
-def part2() -> int:
-    pass
+def part2(text=None) -> int:
+    if not text:
+        with open('day02.input') as f:
+            text = f.read()
+    
+    lines = text.splitlines()
+    
+    x = 0  # horizontal position 
+    depth = 0
+    aim = 0
+
+    for line in lines:
+        direction, mag = line.split()
+        magnitude = int(mag)
+        
+        if direction == "up":
+            aim -= magnitude
+        elif direction == "down":
+            aim += magnitude
+        elif direction == "forward":
+            x += magnitude
+            depth += aim * magnitude
+    
+    return x * depth
 
 
 if __name__ == '__main__':
