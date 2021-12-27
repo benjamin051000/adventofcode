@@ -52,13 +52,14 @@ with open(f'{directory}/solution.py', 'w') as f:
     
         def part1(text: str) -> int:
             lines = text.splitlines()
+            return 0
         
         
         def part2(text: str) -> int:
             lines = text.splitlines()
+            return 0
 
-        
-        if __name__ == '__main__':
+        def main():
             print(f'Running day {day_num}...')
 
             with open('day02.input') as f:
@@ -71,6 +72,9 @@ with open(f'{directory}/solution.py', 'w') as f:
             print('Part 2:', answer)
             
             print('Done.')
+        
+        if __name__ == '__main__':
+            main()
         
     """))
 
