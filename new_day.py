@@ -65,7 +65,7 @@ with open(f"{directory}/solution.py", "w") as f:
         def main():
             print(f'Running day {day_num}...')
 
-            with open('day02.input') as f:
+            with open('day{day_num_str}.input') as f:
                 text = f.read()
 
             answer = part1(text)
