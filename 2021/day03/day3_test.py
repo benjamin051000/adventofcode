@@ -26,8 +26,7 @@ def test_part1():
 
 
 def test_part2():
-    # assert part2(text) == 0
-    pass
+    assert part2(text) == 230
 
 if __name__ == '__main__':
     test_part1()
