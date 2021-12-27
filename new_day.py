@@ -8,6 +8,7 @@ Benjamin Wheeler
 import os
 import textwrap
 from sys import argv
+import subprocess
 
 # Get the days, which are all folders.
 try:
@@ -19,12 +20,12 @@ except:
 days = os.listdir(year)
 
 ignored_dirs = [
-    '__pycache__',
-    '.pytest_cache',
-    '.vscode',
+    "__pycache__",
+    ".pytest_cache",
+    ".vscode",
 ]
 
-numbers = [int(d.strip('day')) for d in days if d not in ignored_dirs]
+numbers = [int(d.strip("day")) for d in days if d not in ignored_dirs]
 
 if len(numbers) == 0:
     numbers = [0]
@@ -37,12 +38,14 @@ day_num_str = f"{day_num:02d}"  # Format with one leading zero
 print(f"Generating '{year}/day{day_num_str}' directory...")
 
 # The name of the new directory from the root directory.
-directory = f'{year}/day{day_num_str}'
+directory = f"{year}/day{day_num_str}"
 os.mkdir(directory)
 
 # Write the solution file
-with open(f'{directory}/solution.py', 'w') as f:
-    f.write(textwrap.dedent(f"""\
+with open(f"{directory}/solution.py", "w") as f:
+    f.write(
+        textwrap.dedent(
+            f"""\
         \"\"\"
         Advent of Code {year}
         Day {day_num} solution
@@ -75,17 +78,20 @@ with open(f'{directory}/solution.py', 'w') as f:
         
         if __name__ == '__main__':
             main()
-        
-    """))
+    """
+        )
+    )
 
 
-# Write the input file and README file
-with open(f'{directory}/day{day_num_str}.input', 'w') as f:
+# Add input file
+with open(f"{directory}/day{day_num_str}.input", "w") as f:
     pass
 
-
-with open(f'{directory}/README.md', 'w') as f:
-    f.write(textwrap.dedent(f"""\
+# Add README file
+with open(f"{directory}/README.md", "w") as f:
+    f.write(
+        textwrap.dedent(
+            f"""\
         # Day {day_num}
         
         ## Part 1
@@ -95,12 +101,16 @@ with open(f'{directory}/README.md', 'w') as f:
         ## Part 2
 
         
-    """))
+    """
+        )
+    )
 
 
 # Write the test file
-with open(f'{directory}/day{day_num}_test.py', 'w') as f:
-    f.write(textwrap.dedent(f"""\
+with open(f"{directory}/day{day_num}_test.py", "w") as f:
+    f.write(
+        textwrap.dedent(
+            f"""\
             \"\"\"
             Advent of Code {year}
             Day {day_num} tests
@@ -120,6 +130,11 @@ with open(f'{directory}/day{day_num}_test.py', 'w') as f:
             def test_part2():
                 assert part2(text) == 0
 
-        """))
+        """
+        )
+    )
 
-print('Done.')
+# Add to git
+subprocess.run(["git", "add", f"{directory}/*"])
+
+print("Done.")
