@@ -1,5 +1,3 @@
-use md5;
-
 fn mine(contents: &String, condition: &str) -> Result<i32, &'static str> {
     let maxiter = 10_000_000;
 
