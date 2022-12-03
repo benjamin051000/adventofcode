@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 
 fn is_nice1(word: String) -> bool {
     let mut num_vowels = 0;
@@ -35,20 +36,63 @@ fn is_nice1(word: String) -> bool {
 }
 
 fn is_nice2(word: String) -> bool {
-    todo!();
+    let mut double_pair = false;
+    let mut seen: HashSet<[u8; 2]> = HashSet::new();
+
+    // Find non-overlapping pairs of 2 chars
+    // Stepping by 2 ensures no overlap!
+    for pair in word.as_bytes().chunks(2) {
+        let pair: [u8; 2] = pair.try_into().unwrap(); // BUG Panicks for odd-length words
+
+        // Have we seen this before?
+        if seen.contains(&pair) {
+            double_pair = true;
+            break;
+        }
+        // Add to visited
+        seen.insert(pair);
+    }
+
+    // Find xyx, where x is any letter, and y is any different letter.
+    let mut xyx = false;
+    for pair in word.as_bytes().windows(3) {
+        let [a, b, c]: [u8; 3] = pair.try_into().unwrap();
+        if a == c && a != b {
+            xyx = true;
+            break;
+        }
+
+    }
+
+    xyx && double_pair
 }
 
-fn main() {
-    let contents = include_str!("../day05_input.txt").to_string();
-
+fn part1(input: &String) -> i32 {
     let mut num_nice = 0;
-    for l in contents.lines() {
+
+    for l in input.lines() {
         if is_nice1(l.to_string()) {
             num_nice += 1;
         }
     }
+    num_nice
+}
 
-    println!("Part 1: {num_nice}");
+fn part2(input: &String) -> i32 {
+    let mut num_nice = 0;
+    for l in input.lines() {
+        if is_nice2(l.to_string()) {
+            num_nice += 1;
+        }
+    }
+
+    num_nice
+}
+
+fn main() {
+    let contents = include_str!("../day05_input.txt").to_string();
+    println!("Part 1: {}", part1(&contents));
+    println!("Part 2: {}", part2(&contents));
 }
 
 
@@ -83,8 +127,28 @@ fn example5() {
     assert!(!is_nice1(contents));
 }
 
+// Part 2 tests
+
 #[test]
 fn example6() {
     let contents = String::from("qjhvhtzxzqqjkmpb");
     assert!(is_nice2(contents));
+}
+
+#[test]
+fn example7() {
+    let contents = String::from("xxyxx");
+    assert!(is_nice2(contents));
+}
+
+#[test]
+fn example8() {
+    let contents = String::from("uurcxstgmygtbstg");
+    assert!(!is_nice2(contents));
+}
+
+#[test]
+fn example9() {
+    let contents = String::from("ieodomkazucvgmuy");
+    assert!(!is_nice2(contents));
 }
