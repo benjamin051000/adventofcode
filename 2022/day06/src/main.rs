@@ -9,29 +9,24 @@ fn all_unique(elements: &[char]) -> bool {
     true
 }
 
-/// Finds first marker in a "stream" of chars.
-fn first_marker(stream: &str) -> u32 {
-    for (idx, fours) in stream.chars().collect::<Vec<char>>().windows(4).enumerate() {
+fn first_marker(stream: &str, num_unique: usize) -> u32 {
+    for (idx, window) in stream.chars().collect::<Vec<char>>().windows(num_unique).enumerate() {
         // Check if each of the fours are unique
         // if they are all different, then a != b && b != c && c != d
-        dbg!(fours);
-        if  all_unique(fours) {
-            println!("They're all unique!");
-            return idx as u32 + 4; // idx of first marker char + 4 = idx of ending marker char
+        if  all_unique(window) {
+            return (idx + num_unique) as u32; // idx of first marker char + 4 = idx of ending marker char
         }
-
-        println!("Some are equal.");
     }
 
     unreachable!();
 }
 
 fn part1(contents: &String) -> u32 {
-    first_marker(contents)
+    first_marker(contents, 4)
 }
 
-fn part2(contents: &String) -> i32 {
-    0
+fn part2(contents: &String) -> u32 {
+    first_marker(contents, 14)
 }
 
 fn main() {
@@ -43,13 +38,15 @@ fn main() {
 #[test]
 fn example1() {
     let contents = "mjqjpqmgbljsphdztnvjfqwrcgsmlb";
-    assert_eq!(first_marker(contents), 7);
+    assert_eq!(first_marker(contents, 4), 7);
+    assert_eq!(first_marker(contents, 14), 19);
 }
 
 #[test]
 fn example2() {
     let contents = "bvwbjplbgvbhsrlpgdmjqwftvncz";
-    assert_eq!(first_marker(contents), 5);
+    assert_eq!(first_marker(contents, 4), 5);
+    assert_eq!(first_marker(contents, 14), 23);
 
 }
 
@@ -57,14 +54,16 @@ fn example2() {
 fn example3() {
     let contents = "nppdvjthqldpwncqszvftbrmjlhg";
 
-    assert_eq!(first_marker(contents), 6);
+    assert_eq!(first_marker(contents, 4), 6);
+    assert_eq!(first_marker(contents, 14), 23);
 }
 
 #[test]
 fn example4() {
     let contents = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg";
 
-    assert_eq!(first_marker(contents), 10);
+    assert_eq!(first_marker(contents, 4), 10);
+    assert_eq!(first_marker(contents, 14), 29);
 }
 
 
@@ -72,6 +71,7 @@ fn example4() {
 fn example5() {
     let contents = "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw";
 
-    assert_eq!(first_marker(contents), 11);
+    assert_eq!(first_marker(contents, 4), 11);
+    assert_eq!(first_marker(contents, 14), 26);
 }
 
