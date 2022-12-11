@@ -1,3 +1,4 @@
+#!/bin/python
 """
 new_day.py
 Generates a directory for a new day automatically.
@@ -13,8 +14,9 @@ import subprocess
 # Get the days, which are all folders.
 try:
     year = argv[1]
+    language = argv[2]
 except:
-    print("Supply a valid year as a command-line argument.")
+    print("Usage: python new_day.py <year> <rust|py> [--dry-run]")
     exit()
 
 days = os.listdir(year)
@@ -23,6 +25,7 @@ ignored_dirs = [
     "__pycache__",
     ".pytest_cache",
     ".vscode",
+    "template.rs"
 ]
 
 numbers = [int(d.strip("day")) for d in days if d not in ignored_dirs]
@@ -37,104 +40,119 @@ day_num_str = f"{day_num:02d}"  # Format with one leading zero
 
 print(f"Generating '{year}/day{day_num_str}' directory...")
 
+if "--dry-run" in argv:
+    print("Dry run done.")
+    exit()
+
 # The name of the new directory from the root directory.
 directory = f"{year}/day{day_num_str}"
-os.mkdir(directory)
 
-# Write the solution file
-with open(f"{directory}/solution.py", "w") as f:
-    f.write(
-        textwrap.dedent(
-            f"""\
-        \"\"\"
-        Advent of Code {year}
-        Day {day_num} solution
-        Author: Benjamin Wheeler
-        \"\"\"
-    
-    
-        def part1(text: str) -> int:
-            lines = text.splitlines()
-            return 0
+if language == "python":
+    os.mkdir(directory)
+
+    # Write the solution file
+    with open(f"{directory}/solution.py", "w") as f:
+        f.write(
+            textwrap.dedent(
+                f"""\
+            \"\"\"
+            Advent of Code {year}
+            Day {day_num} solution
+            Author: Benjamin Wheeler
+            \"\"\"
         
         
-        def part2(text: str) -> int:
-            lines = text.splitlines()
-            return 0
-
-        def main():
-            print(f'Running day {day_num}...')
-
-            with open('day{day_num_str}.input') as f:
-                text = f.read()
-
-            answer = part1(text)
-            print('Part 1:', answer)
+            def part1(text: str) -> int:
+                lines = text.splitlines()
+                return 0
             
-            answer = part2(text)
-            print('Part 2:', answer)
             
-            print('Done.')
-        
-        if __name__ == '__main__':
-            main()
-    """
+            def part2(text: str) -> int:
+                lines = text.splitlines()
+                return 0
+
+            def main():
+                print(f'Running day {day_num}...')
+
+                with open('day{day_num_str}.input') as f:
+                    text = f.read()
+
+                answer = part1(text)
+                print('Part 1:', answer)
+                
+                answer = part2(text)
+                print('Part 2:', answer)
+                
+                print('Done.')
+            
+            if __name__ == '__main__':
+                main()
+        """
+            )
         )
-    )
 
 
 # Add input file
-with open(f"{directory}/day{day_num_str}.input", "w") as f:
-    pass
+    with open(f"{directory}/day{day_num_str}.input", "w") as f:
+        pass
 
 # Add README file
-with open(f"{directory}/README.md", "w") as f:
-    f.write(
-        textwrap.dedent(
-            f"""\
-        # Day {day_num}
-        
-        ## Part 1
-        
-        
-        
-        ## Part 2
+    with open(f"{directory}/README.md", "w") as f:
+        f.write(
+            textwrap.dedent(
+                f"""\
+            # Day {day_num}
+            
+            ## Part 1
+            
+            
+            
+            ## Part 2
 
-        
-    """
-        )
-    )
-
-
-# Write the test file
-with open(f"{directory}/day{day_num}_test.py", "w") as f:
-    f.write(
-        textwrap.dedent(
-            f"""\
-            \"\"\"
-            Advent of Code {year}
-            Day {day_num} tests
-            Author: Benjamin Wheeler
-            \"\"\"
-            from solution import part1, part2
-            from textwrap import dedent
-
-            text = dedent(\"\"\"\\
-
-                \"\"\")
-
-            def test_part1():
-                assert part1(text) == 0
-
-
-            def test_part2():
-                assert part2(text) == 0
-
+            
         """
+            )
         )
-    )
 
-# Add to git
-subprocess.run(["git", "add", f"{directory}/*"])
+
+    # Write the test file
+    with open(f"{directory}/day{day_num}_test.py", "w") as f:
+        f.write(
+            textwrap.dedent(
+                f"""\
+                \"\"\"
+                Advent of Code {year}
+                Day {day_num} tests
+                Author: Benjamin Wheeler
+                \"\"\"
+                from solution import part1, part2
+                from textwrap import dedent
+
+                text = dedent(\"\"\"\\
+
+                    \"\"\")
+
+                def test_part1():
+                    assert part1(text) == 0
+
+
+                def test_part2():
+                    assert part2(text) == 0
+
+            """
+            )
+        )
+
+    # Add to git
+    subprocess.run(["git", "add", f"{directory}/*"])
+
+elif language == "rust":
+    print("Making Rust project...")
+    subprocess.run(["cargo", "new", directory])
+    # Copy template file
+    subprocess.run(["cp", f"{year}/template.rs", f"{directory}/src/main.rs"])
+    # check in 
+    subprocess.run(["git", "add", directory])
+    subprocess.run(["git", "commit", "-m", f"day {day_num} init"])
 
 print("Done.")
