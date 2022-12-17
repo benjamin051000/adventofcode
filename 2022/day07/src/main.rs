@@ -5,6 +5,7 @@ mod fs;
 fn part1(contents: &String) -> i32 {
     // Make root node
     let mut filesys: fs::File<String> = fs::File::new("/".to_string(), fs::FileType::mkdir());
+    let mut fp = &filesys;
 
     for line in contents.lines() {
         // dbg!(line.split(" ").collect::<Vec<&str>>());
@@ -12,7 +13,7 @@ fn part1(contents: &String) -> i32 {
         let tokens: Vec<_> = line.split_whitespace().collect();
         match &tokens[..] {
             ["$", "cd", loc] => println!("Going to {loc}"),
-            ["$", "ls"] => println!("ls"),
+            ["$", "ls"] => continue,
             ["dir", dirname] => println!("mkdir {dirname}"),
             other => println!("{:?}", other)
         }
