@@ -30,7 +30,7 @@ impl<T> FileType<T> {
 /// In UNIX, everything is a file, including dirs, including "/"!
 #[derive(Debug)]
 pub struct File<T> {
-    name: String,
+    pub name: String,
     filetype: FileType<T>
 }
 

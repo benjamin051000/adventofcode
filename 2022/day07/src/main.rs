@@ -5,19 +5,59 @@ mod fs;
 fn part1(contents: &String) -> i32 {
     // Make root node
     let mut filesys: fs::File<String> = fs::File::new("/".to_string(), fs::FileType::mkdir());
-    let mut fp = &filesys;
+    let fp = &mut filesys;
 
     for line in contents.lines() {
         // dbg!(line.split(" ").collect::<Vec<&str>>());
 
         let tokens: Vec<_> = line.split_whitespace().collect();
         match &tokens[..] {
-            ["$", "cd", loc] => println!("Going to {loc}"),
+            ["$", "cd", loc] => {
+                println!("Going to {loc}");
+                // Attempt to "cd" into this dir. If it doesn't exist, make it first.
+                // 1. Are we already at loc?
+                if *loc == fp.name {
+                    continue;
+                }
+                else if *loc == ".." {
+                    // Go up a directory. 
+                    todo!();
+                }
+
+                // 2. Check if loc exists.
+
+                
+            }
+
             ["$", "ls"] => continue,
-            ["dir", dirname] => println!("mkdir {dirname}"),
-            other => println!("{:?}", other)
+
+            ["dir", dirname] => {
+                fp.add(
+                    fs::File::new(
+                        dirname.to_string(),
+                        fs::FileType::mkdir()
+                    )
+                ).unwrap();
+            }
+
+            [size, name] => {
+                // Add this file to current dir.
+                let s = size.parse::<usize>().unwrap();
+                fp.add(
+                    fs::File::new(
+                        name.to_string(),
+                        fs::FileType::touch(
+                            s, 
+                            String::new()
+                        )
+                    )
+                ).unwrap();
+            }
+            _ => unreachable!()
         }
     }
+
+    dbg!(filesys);
 
     0
 }
