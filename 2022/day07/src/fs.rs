@@ -1,26 +1,23 @@
-#![allow(dead_code)]
-
-
 #[derive(Debug)]
-pub enum FileType<T> {
+pub enum FileType<'a, T> {
     File {
         size: usize,
         data: T
     },
     Dir {
-        contents: Vec<Box<File<T>>> 
+        contents: Vec<Box<File<'a, T>>> 
     }
 }
 
 
-impl<T> FileType<T> {
+impl<'a, T> FileType<'a, T> {
     /// Create a new Dir.
-    pub fn mkdir() -> FileType<T> {
-        FileType::Dir{ contents: Vec::<Box<File<T>>>::new() }
+    pub fn mkdir() -> FileType<'a, T> {
+        FileType::Dir{ contents: Vec::<Box<File<'a, T>>>::new() }
     }
 
     /// Create a new File
-    pub fn touch(size: usize, data: T) -> FileType<T> {
+    pub fn touch(size: usize, data: T) -> FileType<'a, T> {
         FileType::File { size, data }
 
     }
@@ -29,15 +26,16 @@ impl<T> FileType<T> {
 
 /// In UNIX, everything is a file, including dirs, including "/"!
 #[derive(Debug)]
-pub struct File<T> {
+pub struct File<'a, T> {
     pub name: String,
-    filetype: FileType<T>
+    pub parent: Option<&'a mut File<'a, T>>,
+    pub filetype: FileType<'a, T>
 }
 
 
-impl<T: std::fmt::Debug + std::fmt::Display> File<T> {
+impl<'a, T: std::fmt::Debug + std::fmt::Display> File<'a, T> {
     /// Add a File (or Dir) to the File's children.
-    pub fn add(&mut self, file: File<T>) -> Result<(), &str> {
+    pub fn add(&mut self, file: File<'a, T>) -> Result<(), &str> {
         match &mut self.filetype {
             FileType::File { .. } => Err("Can't add a file to a file. Consider turning this file into a dir."),
             FileType::Dir { contents } => {
@@ -48,9 +46,10 @@ impl<T: std::fmt::Debug + std::fmt::Display> File<T> {
     }
 
     /// Makes a new tree, starting at "root".
-    pub fn new(name: String, filetype: FileType<T>) -> File<T> {
+    pub fn new(name: String, filetype: FileType<'a, T>) -> File<'a, T> {
         File {
             name,
+            parent: None,
             filetype
         }
     }

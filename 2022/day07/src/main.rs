@@ -1,11 +1,9 @@
-#![allow(unused_variables)]
-
 mod fs;
 
 fn part1(contents: &String) -> i32 {
     // Make root node
     let mut filesys: fs::File<String> = fs::File::new("/".to_string(), fs::FileType::mkdir());
-    let fp = &mut filesys;
+    let mut fp = &filesys;
 
     for line in contents.lines() {
         // dbg!(line.split(" ").collect::<Vec<&str>>());
@@ -17,14 +15,28 @@ fn part1(contents: &String) -> i32 {
                 // Attempt to "cd" into this dir. If it doesn't exist, make it first.
                 // 1. Are we already at loc?
                 if *loc == fp.name {
+                    // We're already here.
                     continue;
                 }
                 else if *loc == ".." {
                     // Go up a directory. 
-                    todo!();
+                    fp = fp.parent.as_ref().unwrap();
                 }
 
-                // 2. Check if loc exists.
+                // 2. Check if loc exists in this directory.
+                match fp.filetype {
+                    fs::FileType::Dir {contents} => {
+                        for f in contents {
+                            // Do the contents of this dir contain another file with its name?
+                            if f.name == *loc {
+                                // If so, "move" there by changing fp to that node.
+                                fp = f.as_ref();
+                            }
+                        }
+
+                    }
+                    _ => unreachable!("Can't cd into a file!")
+                }
 
                 
             }
