@@ -1,85 +1,146 @@
-mod fs;
+use std::collections::HashMap;
 
-fn part1(contents: &String) -> i32 {
-    // Make root node
-    let mut filesys: fs::File<String> = fs::File::new("/".to_string(), fs::FileType::mkdir());
-    let mut fp = &filesys;
+#[derive(Debug, Clone)]
+struct File<'a> {
+    parent: &'a str,
+    size: i64
+}
+
+impl<'a> File<'a> {
+    fn new(parent: &'a str, size: i64) -> Self {
+        File {
+            parent,
+            size
+        }
+    }
+}
+
+fn get_dir_sizes<'a>(fs: HashMap<&'a str, File<'a>>) -> HashMap<&'a str, i64> {
+
+    let mut dir_sizes = HashMap::<&str, i64>::new();
+
+    // Add sizes from non-directories.
+    for (_, file) in &fs {
+        dir_sizes
+            .entry(file.parent)
+            .and_modify(|s| *s += file.size)
+            .or_insert(file.size);
+    }
+
+    // Add sizes from nested directories.
+    for (name, file) in fs.clone() {
+        // Get just the directories
+        if file.size == 0 {
+            // This is a dir.
+            // Add its size to its parents.
+            let this_dirs_size = *dir_sizes
+                .get(name)
+                .expect(format!("{name} had 0...").as_str());
+            // println!("dir {} is {}", name, this_dirs_size);
+
+            // Add this value to its parents, all the way up to "/".
+            let mut fp = name;
+            // dbg!(fp);
+
+            let mut i = 0;
+            loop {
+                fp = &fs.get(fp).unwrap().parent;
+                // let file_to_change: &mut File = fs.get_mut(fp).unwrap();
+                let file_to_change = dir_sizes.get_mut(fp).unwrap();
+
+                // println!("\tFile to change: {} {:?}", fp, file_to_change);
+                // println!("\tAdding {}", this_dirs_size);
+
+                *file_to_change += this_dirs_size;
+
+                // println!("\tNew File: {} {:?}", fp, file_to_change);
+
+                // Move the file pointer up a directory to the next parent.
+                if fp == "/" { break; }
+                i += 1;
+                if i > 1000 {
+                    panic!("Something's wrong.");
+                }
+                // dbg!(fp);
+            }
+            // println!("-------------------");
+        }
+    }
+    dbg!(&dir_sizes);
+
+    dir_sizes
+}
+
+
+fn part1(contents: &String) -> i64 {
+    // Name -> {parent, size}
+    let mut fs: HashMap<&str, File> = HashMap::new();
+    // Insert root, which is a parent of itself.
+    // fs.insert("/", File::new("/", 0));
+    let mut fp = "/";
 
     for line in contents.lines() {
-        // dbg!(line.split(" ").collect::<Vec<&str>>());
-
         let tokens: Vec<_> = line.split_whitespace().collect();
         match &tokens[..] {
             ["$", "cd", loc] => {
-                println!("Going to {loc}");
                 // Attempt to "cd" into this dir. If it doesn't exist, make it first.
                 // 1. Are we already at loc?
-                if *loc == fp.name {
-                    // We're already here.
+                // NOTE omit this for now since you can have nested files with the same name.
+
+                // Are we going up a directory?
+                if *loc == ".." {
+                    fp = fs.get(fp).unwrap().parent;
+                    dbg!(&fp);
                     continue;
                 }
-                else if *loc == ".." {
-                    // Go up a directory. 
-                    fp = fp.parent.as_ref().unwrap();
+
+                // Do we need to create this directory?
+                match fs.get(loc) {
+                    None => {
+                        // Create the folder and set fp to it.
+                        fs.insert(loc, File::new(fp, 0));
+                    },
+                    _ => {},
                 }
-
-                // 2. Check if loc exists in this directory.
-                match fp.filetype {
-                    fs::FileType::Dir {contents} => {
-                        for f in contents {
-                            // Do the contents of this dir contain another file with its name?
-                            if f.name == *loc {
-                                // If so, "move" there by changing fp to that node.
-                                fp = f.as_ref();
-                            }
-                        }
-
-                    }
-                    _ => unreachable!("Can't cd into a file!")
-                }
-
                 
+                // Set the file pointer to this location.
+                fp = loc;
+                dbg!(&fp);
             }
 
             ["$", "ls"] => continue,
 
             ["dir", dirname] => {
-                fp.add(
-                    fs::File::new(
-                        dirname.to_string(),
-                        fs::FileType::mkdir()
-                    )
-                ).unwrap();
+                // Insert this dir inside the current one.
+                fs.insert(dirname, File::new(fp, 0));
+                println!("Created directory \"{}\" in \"{}\"", dirname, fp);
             }
 
             [size, name] => {
-                // Add this file to current dir.
-                let s = size.parse::<usize>().unwrap();
-                fp.add(
-                    fs::File::new(
-                        name.to_string(),
-                        fs::FileType::touch(
-                            s, 
-                            String::new()
-                        )
-                    )
-                ).unwrap();
+                fs.insert(name, File::new(fp, size.parse().unwrap()));
+                println!("Created file \"{}\" in \"{}\"", name, fp);
             }
             _ => unreachable!()
         }
+
+        // dbg!(&fs);
     }
 
-    dbg!(filesys);
+    let sizes = get_dir_sizes(fs);
+    dbg!(&sizes);
 
-    0
+    sizes
+        .values()
+        .filter(|s| **s < 100_000)
+        .sum()
 }
 
-fn part2(contents: &String) -> i32 {
+fn part2(contents: &String) -> i64 {
     0
 }
 
 fn main() {
-    let contents = std::fs::read_to_string("day04_input.txt").expect("Read file successfully");
+    let contents = std::fs::read_to_string("day07_input.txt").expect("Read file successfully");
     println!("Part 1: {}", part1(&contents));
     println!("Part 2: {}", part2(&contents));
 }
@@ -87,11 +148,7 @@ fn main() {
 #[test]
 fn example1() {
     let contents = include_str!("../test.txt").to_string();
-
-    dbg!(&contents);
-    part1(&contents);
-    assert!(false);
-
+    assert_eq!(part1(&contents), 95437);
 }
 
 #[test]
