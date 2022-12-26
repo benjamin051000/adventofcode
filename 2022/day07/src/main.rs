@@ -19,6 +19,10 @@ type FileSystem = HashMap<String, File>;
 // BUG: This will sometimes double-count subdirs.
 // For example, /a/e/ is added to /, but later, /a will add to /, which double-counts e.
 // Not sure how to fix this, so ignore it for now lol
+
+// TODO another idea is to only count non-dirs, and just add each one to EVERY parent.
+// So iterate until you find a non-dir (file with non-zero size), and just add its size
+// to each parent all the way up. This is deterministic! Should work!
 fn get_dir_sizes(fs: FileSystem) -> HashMap<String, i64> {
     let mut dir_sizes = HashMap::<String, i64>::new();
 
@@ -34,13 +38,13 @@ fn get_dir_sizes(fs: FileSystem) -> HashMap<String, i64> {
     for (name, file) in fs.clone() {
         // Skip /, which will be updated automatically by other ones.
         if name == "/" {
-            println!("Skipping root");
+            // println!("Skipping root");
             continue;
         }
 
         // Get just directories
         if file.size == 0 {
-            println!("Found dir \"{name}\" size {}. Updating parents...", file.size);
+            // println!("Found dir \"{name}\" size {}. Updating parents...", file.size);
             let child_dirs_size: i64 = *dir_sizes
                 .get(&name)
                 .expect(format!("{name} was in dir_sizes with size 0").as_str());
@@ -53,9 +57,9 @@ fn get_dir_sizes(fs: FileSystem) -> HashMap<String, i64> {
 
             loop {
                 // Update file pointer to the current file's parent.
-                print!("fp: {fp} -> ");
+                // print!("fp: {fp} -> ");
                 fp = fs.get(&fp).unwrap().parent.to_string();
-                println!("{fp}");
+                // println!("{fp}");
 
                 // Get dir to change
                 let dir_to_change = dir_sizes.get_mut(&fp).unwrap();
