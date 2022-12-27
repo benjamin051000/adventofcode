@@ -1,4 +1,4 @@
-use std::{collections::HashMap, mem::needs_drop};
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Clone)]
 struct File {
@@ -23,71 +23,39 @@ type FileSystem = HashMap<String, File>;
 // TODO another idea is to only count non-dirs, and just add each one to EVERY parent.
 // So iterate until you find a non-dir (file with non-zero size), and just add its size
 // to each parent all the way up. This is deterministic! Should work!
+
 fn get_dir_sizes(fs: FileSystem) -> HashMap<String, i64> {
+    // Get set of dirs (so we know which ones to skip during iteration)
+    let all_dirnames = fs
+        .iter()
+        .filter(|(_, f)| f.size == 0)
+        .map(|(name, _)| name.to_string())
+        .collect::<HashSet<String>>();
+
     let mut dir_sizes = HashMap::<String, i64>::new();
 
-    // Add sizes from non-directories.
-    for (_, file) in &fs {
-        dir_sizes
-            .entry(file.parent.to_string())
-            .and_modify(|s| *s += file.size)
-            .or_insert(file.size);
-    }
+    for (name, _) in &fs {
+        // Skip if it's a directory.
+        if all_dirnames.contains(&name.to_string()) { continue; }
 
-    // Add sizes from nested directories.
-    for (name, file) in fs.clone() {
-        // Skip /, which will be updated automatically by other ones.
-        if name == "/" {
-            // println!("Skipping root");
-            continue;
+        let this_size: i64 = fs.get(name).unwrap().size;
+
+        // For each file, add its size to each parent up to "/".
+        let mut fp = &fs.get(name).unwrap().parent;
+        loop {
+            // Add to its dir size.
+            dir_sizes
+                .entry(fp.to_string())
+                .and_modify(|sz| *sz += this_size)
+                .or_insert(this_size);
+
+            // If we just modified the "/" size, we're done.
+            if fp == "/" { break; }
+            // Update fp 
+            fp = &fs.get(fp).unwrap().parent;
+            
         }
-
-        // Get just directories
-        if file.size == 0 {
-            // println!("Found dir \"{name}\" size {}. Updating parents...", file.size);
-            let child_dirs_size: i64 = *dir_sizes
-                .get(&name)
-                .expect(format!("{name} was in dir_sizes with size 0").as_str());
-
-            // Add its size to each of its parents up to "/".
-
-            // File pointer starts at this file.
-            let mut fp: String = name;
-            let mut timeout_counter = 0;
-
-            loop {
-                // Update file pointer to the current file's parent.
-                // print!("fp: {fp} -> ");
-                fp = fs.get(&fp).unwrap().parent.to_string();
-                // println!("{fp}");
-
-                // Get dir to change
-                let dir_to_change = dir_sizes.get_mut(&fp).unwrap();
-
-                // println!("\tFile to change: {} {:?}", fp, file_to_change);
-                // println!("\tAdding {}", this_dirs_size);
-
-                *dir_to_change += child_dirs_size;
-
-                // println!("\tNew File: {} {:?}", fp, file_to_change);
-
-                // Move the file pointer up a directory to the next parent.
-                if fp == "/" { 
-                    // println!("Done updating parents.");
-                    break; 
-                }
-
-                // Update timeout counter
-                timeout_counter  += 1;
-                if timeout_counter > 1000 {
-                    panic!("Something's wrong.");
-                }
-                // dbg!(fp);
-            } // end of loop
-
-        } // end of if file.size == 0
-    } // end of for
-
+    }
     dir_sizes
 }
 
