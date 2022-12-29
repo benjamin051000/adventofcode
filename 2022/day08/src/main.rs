@@ -7,7 +7,7 @@ fn part2(contents: &String) -> i32 {
 }
 
 fn main() {
-    let contents = std::fs::read_to_string("day04_input.txt").expect("Read file successfully");
+    let contents = std::fs::read_to_string("day08_input.txt").expect("Read file successfully");
     println!("Part 1: {}", part1(&contents));
     println!("Part 2: {}", part2(&contents));
 }
