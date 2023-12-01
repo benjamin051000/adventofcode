@@ -47,11 +47,11 @@ if "--dry-run" in argv:
 # The name of the new directory from the root directory.
 directory = f"{year}/day{day_num_str}"
 
-if language == "python":
+if language in ["py", "python"]:
     os.mkdir(directory)
 
     # Write the solution file
-    with open(f"{directory}/solution.py", "w") as f:
+    with open(f"{directory}/day{day_num_str}.py", "w") as f:
         f.write(
             textwrap.dedent(
                 f"""\
@@ -74,7 +74,7 @@ if language == "python":
             def main():
                 print(f'Running day {day_num}...')
 
-                with open('day{day_num_str}.input') as f:
+                with open('day{day_num_str}_input.txt') as f:
                     text = f.read()
 
                 answer = part1(text)
@@ -93,7 +93,7 @@ if language == "python":
 
 
 # Add input file
-    with open(f"{directory}/day{day_num_str}.input", "w") as f:
+    with open(f"{directory}/day{day_num_str}_input.txt", "w") as f:
         pass
 
 # Add README file
@@ -116,7 +116,7 @@ if language == "python":
 
 
     # Write the test file
-    with open(f"{directory}/day{day_num}_test.py", "w") as f:
+    with open(f"{directory}/day{day_num_str}_test.py", "w") as f:
         f.write(
             textwrap.dedent(
                 f"""\
@@ -125,7 +125,7 @@ if language == "python":
                 Day {day_num} tests
                 Author: Benjamin Wheeler
                 \"\"\"
-                from solution import part1, part2
+                from day{day_num_str} import part1, part2
                 from textwrap import dedent
 
                 text = dedent(\"\"\"\\
@@ -151,8 +151,6 @@ elif language == "rust":
     subprocess.run(["cargo", "new", directory])
     # Copy template file
     subprocess.run(["cp", f"{year}/template.rs", f"{directory}/src/main.rs"])
-    # check in 
     subprocess.run(["git", "add", directory])
-    subprocess.run(["git", "commit", "-m", f"day {day_num} init"])
 
 print("Done.")
