@@ -132,13 +132,26 @@ if language in ["py", "python"]:
 
                     \"\"\")
 
-                def test_part1():
+                def test_part1_example():
                     assert part1(text) == 0
 
 
-                def test_part2():
+                def test_part2_example():
                     assert part2(text) == 0
 
+
+                ##############################
+                # WARNING: SPOILERS AHEAD!!!
+                ##############################
+                def test_part1():
+                    with open('day{day_num_str}_input.txt') as f:
+                        text = f.read()
+                    assert part1(text) == 0  # TODO replace with actual solution
+
+                def test_part2():
+                    with open('day{day_num_str}_input.txt') as f:
+                        text = f.read()
+                    assert part2(text) == 0  # TODO replace with actual solution
             """
             )
         )
