@@ -32,7 +32,22 @@ def part1(text: str) -> int:
 
 def part2(text: str) -> int:
     lines = text.splitlines()
-    return 0
+    total = 0
+    for game_num, line in enumerate(lines, start=1):
+        line = line[line.index(': ')+2:]
+        parts = line.split(';')
+
+        maxes = {k: 0 for k in ["red", "green", "blue"]}
+
+        for part in parts:
+            part = part.split(', ')
+            vals = {x.split()[1]: int(x.split()[0]) for x in part}
+            for k in vals.keys():  # lol
+                maxes[k] = max(maxes[k], vals[k])
+
+        total += maxes["red"] * maxes["green"] * maxes["blue"]
+
+    return total
 
 def main():
     print(f'Running day 2...')

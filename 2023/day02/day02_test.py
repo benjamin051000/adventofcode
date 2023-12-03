@@ -19,7 +19,7 @@ def test_part1_example():
 
 
 def test_part2_example():
-    assert part2(text) == 0
+    assert part2(text) == 2286
 
 
 ##############################
@@ -28,7 +28,7 @@ def test_part2_example():
 def test_part1():
     with open('day02_input.txt') as f:
         text = f.read()
-    assert part1(text) == 0  # TODO replace with actual solution
+    assert part1(text) == 2771  
 
 def test_part2():
     with open('day02_input.txt') as f:
