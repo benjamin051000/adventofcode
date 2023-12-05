@@ -7,7 +7,14 @@ Author: Benjamin Wheeler
 
 def part1(text: str) -> int:
     lines = text.splitlines()
-    return 0
+    total = 0
+    for line in lines:
+        winning_nums_str, your_nums_str = line[line.index(':')+1:].split('|')
+        winning_nums = set(winning_nums_str.split())
+        your_nums = set(your_nums_str.split())
+        winners = your_nums.intersection(winning_nums)
+        total += int(2 ** (len(winners) - 1))
+    return total
 
 
 def part2(text: str) -> int:
