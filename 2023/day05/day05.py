@@ -12,6 +12,10 @@ def create_map(text: str):
     range_from_to_text = lines.pop(0).split(' ')[0].split('-')
     range_from, range_to = range_from_to_text[0], range_from_to_text[-1]
 
+    # Set up the mappings
+
+    # Put it all into one data structure (how?) and return
+
 
 def part1(text: str) -> int:
     paragraphs = text.split("\n\n")
