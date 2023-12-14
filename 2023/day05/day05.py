@@ -4,9 +4,24 @@ Day 5 solution
 Author: Benjamin Wheeler
 """
 
+# TODO return type hint
+def create_map(text: str):
+    lines = text.splitlines()
+
+    # First, obtain the mapping.
+    range_from_to_text = lines.pop(0).split(' ')[0].split('-')
+    range_from, range_to = range_from_to_text[0], range_from_to_text[-1]
+
 
 def part1(text: str) -> int:
-    lines = text.splitlines()
+    paragraphs = text.split("\n\n")
+
+    seeds = paragraphs.pop(0)
+    maps = []
+    for paragraph in paragraphs:
+        maps.append(create_map(paragraph))
+
+
     return 0
 
 
