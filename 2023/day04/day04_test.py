@@ -20,7 +20,7 @@ def test_part1_example():
 
 
 def test_part2_example():
-    assert part2(text) == 0
+    assert part2(text) == 30
 
 
 ##############################
@@ -34,4 +34,5 @@ def test_part1():
 def test_part2():
     with open('day04_input.txt') as f:
         text = f.read()
-    assert part2(text) == 0  # TODO replace with actual solution
+    assert part2(text) == 5329815  # TODO replace with actual solution
+
