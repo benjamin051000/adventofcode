@@ -10,6 +10,7 @@ import os
 import textwrap
 from sys import argv
 import subprocess
+import pathlib
 
 # Get the days, which are all folders.
 try:
@@ -165,5 +166,9 @@ elif language == "rust":
     # Copy template file
     subprocess.run(["cp", f"{year}/template.rs", f"{directory}/src/main.rs"])
     subprocess.run(["git", "add", directory])
+
+# (re)create link to latest dir
+pathlib.Path('./latest').symlink_to(directory)
+
 
 print("Done.")
